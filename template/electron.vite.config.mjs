@@ -4,7 +4,15 @@ import renderer from "vite-plugin-electron-renderer";
 
 export default defineConfig({
     main: {
-        plugins: [externalizeDepsPlugin()],
+        plugins: [
+            externalizeDepsPlugin({
+                include: ["serialport", "socket.io-client"],
+                exclude: [
+                    "@fainthit/rebase-core",
+                    "@fainthit/rebase-communication",
+                ],
+            }),
+        ],
     },
     renderer: {
         plugins: [svelte(), renderer()],

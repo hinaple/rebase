@@ -6,9 +6,9 @@ type connectHandler = (data: string) => any;
 export default class SerialConnector {
     private port: null | SerialPort;
     private ondata: dataHandler;
-    private onconnect: connectHandler;
+    private onconnect?: connectHandler;
 
-    constructor(ondata: dataHandler, onconnect: connectHandler) {
+    constructor(ondata: dataHandler, onconnect?: connectHandler) {
         this.port = null;
         this.ondata = ondata;
         this.onconnect = onconnect;
@@ -51,6 +51,7 @@ export default class SerialConnector {
 
         this.port.on("readable", () => {
             const data = this.port?.read();
+            if (!data) return;
             this.ondata?.(data.toString().trim());
         });
         this.port.on("disconnect", () => {

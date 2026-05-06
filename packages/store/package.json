@@ -1,7 +1,7 @@
 {
-    "name": "@fainthit/rebase-core",
+    "name": "@fainthit/rebase-store",
     "version": "0.1.0",
-    "description": "rebase core package",
+    "description": "rebase store package",
     "license": "ISC",
     "author": "fainthit@kakao.com",
     "type": "module",
@@ -19,28 +19,12 @@
         "./config": {
             "types": "./dist/config/index.d.ts",
             "import": "./dist/config/index.js"
-        },
-        "./electron": {
-            "types": "./dist/electron/index.d.ts",
-            "import": "./dist/electron/index.js"
         }
     },
     "files": [
         "dist"
     ],
-    "dependencies": {
-        "@fainthit/rebase-communication": "*"
-    },
     "devDependencies": {
-        "@electron-toolkit/utils": "^4.0.0",
-        "@types/node": "^24.0.0",
-        "electron": "^37.2.3",
-        "electron-store": "^11.0.2",
         "typescript": "^6.0.3"
-    },
-    "peerDependencies": {
-        "@electron-toolkit/utils": "^4.0.0",
-        "electron": "^37.2.3",
-        "electron-store": "^11.0.2"
     }
 }

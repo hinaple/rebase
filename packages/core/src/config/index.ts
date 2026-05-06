@@ -1,3 +1,4 @@
+export * from "./communication.js";
 export * from "./defineConfig.js";
 export * from "./defaults.js";
 export * from "./resolveConfig.js";

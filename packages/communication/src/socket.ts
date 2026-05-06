@@ -33,7 +33,7 @@ export default class SocketConnector {
         this.url = null;
         this.connected = false;
     }
-    async connect(urls: [string]) {
+    async connect(urls: string | string[]) {
         if (!Array.isArray(urls)) urls = [urls];
         if (this.socket && this.connected) return true;
         else if (this.socket) this.disconnect();
@@ -56,7 +56,7 @@ export default class SocketConnector {
         }
         return false;
     }
-    send(channel: string, ...data: [any]) {
+    send(channel: string, ...data: any[]) {
         if (!channel) return;
 
         if (!this.socket) {

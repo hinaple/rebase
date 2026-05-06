@@ -14,7 +14,7 @@
     },
     "dependencies": {
         "@electron-toolkit/utils": "^4.0.0",
-        "electron-prompt": "^1.7.0",
+        "@fainthit/rebase-core": "*",
         "electron-store": "^11.0.2"
     },
     "devDependencies": {
