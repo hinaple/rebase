@@ -1,0 +1,26 @@
+appId: com.rebase.app
+productName: rebase
+directories:
+    buildResources: build
+files:
+    - "!**/.vscode/*"
+    - "!src/*"
+    - "!electron.vite.config.{js,ts,mjs,cjs}"
+    - "!svelte.config.mjs"
+    - "!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}"
+    - "!{.env,.env.*,.npmrc,pnpm-lock.yaml}"
+asarUnpack:
+    - resources/**
+win:
+    executableName: rebase
+nsis:
+    artifactName: ${name}-${version}-setup.${ext}
+    shortcutName: ${productName}
+    uninstallDisplayName: ${productName}
+    createDesktopShortcut: always
+    perMachine: true
+    oneClick: false
+    allowToChangeInstallationDirectory: true
+appImage:
+    artifactName: ${name}-${version}.${ext}
+npmRebuild: false

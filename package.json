@@ -1,0 +1,11 @@
+{
+    "name": "rebase",
+    "private": true,
+    "workspaces": [
+        "packages/*",
+        "template"
+    ],
+    "scripts": {
+        "dev": "npm --workspace template run dev"
+    }
+}

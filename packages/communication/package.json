@@ -1,0 +1,44 @@
+{
+    "name": "@fainthit/rebase-communication",
+    "version": "0.1.0",
+    "description": "rebase communication package",
+    "license": "ISC",
+    "author": "fainthit@kakao.com",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "typecheck": "tsc --noEmit"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
+        "./serial": {
+            "types": "./dist/serial.d.ts",
+            "import": "./dist/serial.js"
+        },
+        "./socket": {
+            "types": "./dist/socket.d.ts",
+            "import": "./dist/socket.js"
+        },
+        "./config": {
+            "types": "./dist/config.d.ts",
+            "import": "./dist/config.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "devDependencies": {
+        "@types/node": "^24.0.0",
+        "typescript": "^6.0.3"
+    },
+    "dependencies": {
+        "@fainthit/rebase-core": "*",
+        "serialport": "^13.0.0",
+        "socket.io-client": "^4.8.3"
+    }
+}
