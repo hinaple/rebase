@@ -6,6 +6,7 @@
         "template"
     ],
     "scripts": {
+        "build:packages": "node scripts/build-packages.mjs",
         "dev": "npm --workspace template run dev"
     }
 }

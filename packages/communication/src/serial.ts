@@ -1,17 +1,36 @@
 import { SerialPort } from "serialport";
 
-type dataHandler = (data: string) => any;
-type connectHandler = (data: string) => any;
+export type SerialChannel = "connect" | "disconnect" | "data" | "connectionError";
+export type SerialDataHandler = (
+    channel: SerialChannel,
+    data: string | null,
+) => void;
 
 export default class SerialConnector {
     private port: null | SerialPort;
-    private ondata: dataHandler;
-    private onconnect?: connectHandler;
+    private listeners: Set<SerialDataHandler>;
 
-    constructor(ondata: dataHandler, onconnect?: connectHandler) {
+    constructor(ondata?: SerialDataHandler) {
         this.port = null;
-        this.ondata = ondata;
-        this.onconnect = onconnect;
+        this.listeners = new Set();
+        if (ondata) this.addListener(ondata);
+    }
+
+    addListener(listener: SerialDataHandler) {
+        this.listeners.add(listener);
+        return () => {
+            this.removeListener(listener);
+        };
+    }
+
+    removeListener(listener: SerialDataHandler) {
+        this.listeners.delete(listener);
+    }
+
+    private emitData(channel: SerialChannel, data: string | null) {
+        for (const listener of this.listeners) {
+            listener(channel, data);
+        }
     }
 
     async open({
@@ -23,7 +42,7 @@ export default class SerialConnector {
         path?: string | null;
         baudRate?: number;
     } = {}): Promise<void> {
-        if (this.port) this.port.close();
+        if (this.port) this.close();
 
         let realPort = path;
 
@@ -47,17 +66,18 @@ export default class SerialConnector {
         });
 
         console.log("SERIAL OPENED: ", realPort);
-        this.onconnect?.(realPort);
+        this.emitData("connect", realPort);
 
         this.port.on("readable", () => {
             const data = this.port?.read();
             if (!data) return;
-            this.ondata?.(data.toString().trim());
+            this.emitData("data", data.toString().trim());
         });
         this.port.on("disconnect", () => {
             this.close();
         });
         this.port.on("connectionError", () => {
+            this.emitData("connectionError", null);
             this.close();
         });
     }
@@ -74,5 +94,6 @@ export default class SerialConnector {
         if (!this.port || !this.port.isOpen) return;
         this.port.close();
         this.port = null;
+        this.emitData("disconnect", null);
     }
 }

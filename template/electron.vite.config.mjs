@@ -15,6 +15,7 @@ export default defineConfig({
         ],
     },
     renderer: {
+        publicDir: "src/assets",
         plugins: [svelte(), renderer()],
     },
 });

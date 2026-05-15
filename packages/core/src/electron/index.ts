@@ -1,1 +1,1 @@
-export * from "./startRebaseApp.js";
+export * from "./rebaseApp.js";

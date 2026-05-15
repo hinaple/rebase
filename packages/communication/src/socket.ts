@@ -18,21 +18,40 @@ function tryToConnect(
     });
 }
 
-type dataHandler = (channel: string, data: string | null, url: string) => any;
+export type SocketDataHandler = (channel: string, ...data: unknown[]) => void;
 
 export default class SocketConnector {
     private socket: null | Socket;
-    private ondata: dataHandler;
-    private url: null | string;
+    private listeners: Set<SocketDataHandler>;
 
     public connected: boolean = false;
+    public url: null | string;
 
-    constructor(ondata: dataHandler) {
+    constructor(ondata?: SocketDataHandler) {
         this.socket = null;
-        this.ondata = ondata;
+        this.listeners = new Set();
         this.url = null;
         this.connected = false;
+        if (ondata) this.addListener(ondata);
     }
+
+    addListener(listener: SocketDataHandler) {
+        this.listeners.add(listener);
+        return () => {
+            this.removeListener(listener);
+        };
+    }
+
+    removeListener(listener: SocketDataHandler) {
+        this.listeners.delete(listener);
+    }
+
+    private emitData(channel: string, ...data: unknown[]) {
+        for (const listener of this.listeners) {
+            listener(channel, ...data);
+        }
+    }
+
     async connect(urls: string | string[]) {
         if (!Array.isArray(urls)) urls = [urls];
         if (this.socket && this.connected) return true;
@@ -44,16 +63,18 @@ export default class SocketConnector {
                 this.url = url;
                 this.socket = result.socket;
                 this.connected = true;
-                this.ondata?.("connect", null, url);
-                this.socket.onAny((channel, data) => {
+                this.emitData("connect", url);
+                this.socket.onAny((channel, ...data) => {
                     if (channel === "disconnect" || channel === "connect_error")
                         this.connected = false;
                     if (channel === "connect") this.connected = true;
-                    this.ondata?.(channel, data, url);
+                    this.emitData(channel, ...data);
                 });
                 return true;
             }
         }
+        this.connected = false;
+        this.url = null;
         return false;
     }
     send(channel: string, ...data: any[]) {
